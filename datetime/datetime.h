@@ -124,7 +124,7 @@ extern	timeStatus_t	timeStatus();
 extern	void			setSyncProvider(getExternalTime getTimeFunction);
 extern	void			setSyncInterval(time_t interval);
 
-extern	void	breakTime(time_t time, tmElements_t *tm);	// Break time_t into elements
+extern	void	breakTime(time_t timeInput, tmElements_t *tm);	// Break time_t into elements
 extern	time_t	makeTime(tmElements_t *tm);					// Convert elements into time_t
 
 
