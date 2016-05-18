@@ -6,6 +6,7 @@
 #include <stdint.h>
 
 #include "datetime/datetime.h"
+#include "scheduling/scheduling.h"
 
 #include "driverlib/sysctl.h"
 #include "driverlib/systick.h"
@@ -13,6 +14,7 @@
 uint64_t millis;
 
 uint32_t _year, _month, _day, _hour, _minute, _second;
+uint16_t percent;
 
 void SysTickIntHandler()
 {
@@ -48,10 +50,24 @@ void main(void) {
 
 	SysTickBegin();
 
-	setTimeFromParts(2016,5,17,21,13,30);
+	setTimeFromParts(2016,5,18,21,10,00);
+
+
+	Schedule s1;
+
+	time_t startTime = getTimeFromParts(2016,5,18,21,0,0);
+	time_t endTime = getTimeFromParts(2016,5,18,21,20,0);
+//	setStartTime(&s1, startTime, false);
+//	setEndTime(&s1, endTime);
+
+
+
+	setStartTimeFromNow(&s1, -minutesToTime_t(10));
+	setEndTimeFromNow(&s1,minutesToTime_t(10));
 
 	while(1)
 	{
+		percent = updateElapsedTime(&s1);
 		 _year = yearNow();
 		 _month = monthNow();
 		 _day = dayNow();

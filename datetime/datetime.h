@@ -50,7 +50,7 @@ typedef struct {
 	uint8_t Day;
 	uint8_t Month;
 	uint8_t Year;	// Offset from 2000
-} tmElements_t, TimeElements, *tmElementsPtr_t;
+} tmElements_t;
 
 
 
@@ -112,6 +112,8 @@ extern	time_t		now();					// Current time as seconds since 2000-01-01
 extern	void	setTime(time_t t);
 extern	void	setTimeFromParts(uint32_t year, uint32_t month, uint32_t day, uint32_t hour, uint32_t minute, uint32_t second);
 extern	void	adjustTime(uint64_t adjustment);
+
+extern	time_t	getTimeFromParts(uint32_t year, uint32_t month, uint32_t day, uint32_t hour, uint32_t minute, uint32_t second);
 
 #define	dt_MAX_STRING_LENGTH	9
 extern	char*	monthStr(uint8_t month);

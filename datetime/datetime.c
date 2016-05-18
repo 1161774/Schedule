@@ -373,20 +373,32 @@ void setTime(time_t t) {
   prevMillis = millis;
 }
 
+
+time_t	getTimeFromParts(uint32_t year, uint32_t month, uint32_t day, uint32_t hour, uint32_t minute, uint32_t second)
+{
+	  if( year > 99)
+	  {
+		  year = year - 2000;
+	  }
+	  tm.Year = year;
+	  tm.Month = month;
+	  tm.Day = day;
+	  tm.Hour = hour;
+	  tm.Minute = minute;
+	  tm.Second = second;
+
+	  return makeTime(&tm);
+}
+
+
 void setTimeFromParts(uint32_t year, uint32_t month, uint32_t day, uint32_t hour, uint32_t minute, uint32_t second)
 {
-  if( year > 99)
-  {
-	  year = year - 2000;
-  }
-  tm.Year = year;
-  tm.Month = month;
-  tm.Day = day;
-  tm.Hour = hour;
-  tm.Minute = minute;
-  tm.Second = second;
-  setTime(makeTime(&tm));
+
+
+	setTime(getTimeFromParts(year, month, day, hour, minute, second));
 }
+
+
 
 void adjustTime(uint64_t adjustment) {
   sysTime += adjustment;
