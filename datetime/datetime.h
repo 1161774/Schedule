@@ -121,7 +121,6 @@ extern	char*	dayStr(uint8_t day);
 extern	char*	monthShortStr(uint8_t month);
 extern	char*	dayShortStr(uint8_t day);
 
-
 extern	timeStatus_t	timeStatus();
 extern	void			setSyncProvider(getExternalTime getTimeFunction);
 extern	void			setSyncInterval(time_t interval);

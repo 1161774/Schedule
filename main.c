@@ -50,29 +50,33 @@ void main(void) {
 
 	SysTickBegin();
 
-	setTimeFromParts(2016,5,18,21,10,00);
+	Schedule s;
+	tmElements_t tm;
 
 
-	Schedule s1;
-
-	time_t startTime = getTimeFromParts(2016,5,18,21,0,0);
-	time_t endTime = getTimeFromParts(2016,5,18,21,20,0);
-//	setStartTime(&s1, startTime, false);
-//	setEndTime(&s1, endTime);
+	setTimeFromParts(2016,5,22,05,00,00);
 
 
+	s.StartTime = getTimeFromParts(2016,5,22,01,00,00);
+	breakTime(s.StartTime, &tm);
 
-	setStartTimeFromNow(&s1, -minutesToTime_t(10));
-	setEndTimeFromNow(&s1,minutesToTime_t(10));
+
+	createScheduleFromComponents(&s, schIDnull, schIRthis, schIWsunday, schIMnull, 23, 15, schAPnull, 0, schRFnull);
+	breakTime(s.EndTime, &tm);
+	createScheduleFromComponents(&s, schIDnull, schIRthis, schIWmonday, schIMnull, 23, 30, schAPnull, 0, schRFnull);
+	breakTime(s.EndTime, &tm);
+	createScheduleFromComponents(&s, schIDnull, schIRthis, schIWwednesday, schIMnull, 23, 45, schAPnull, 0, schRFnull);
+	breakTime(s.EndTime, &tm);
+
+	createScheduleFromComponents(&s, schIDnull, schIRnext, schIWsunday, schIMnull, 23, 15, schAPnull, 0, schRFnull);
+	breakTime(s.EndTime, &tm);
+	createScheduleFromComponents(&s, schIDnull, schIRnext, schIWmonday, schIMnull, 23, 30, schAPnull, 0, schRFnull);
+	breakTime(s.EndTime, &tm);
+	createScheduleFromComponents(&s, schIDnull, schIRnext, schIWwednesday, schIMnull, 23, 45, schAPnull, 0, schRFnull);
+	breakTime(s.EndTime, &tm);
+
 
 	while(1)
 	{
-		percent = updateElapsedTime(&s1);
-		 _year = yearNow();
-		 _month = monthNow();
-		 _day = dayNow();
-		 _hour = hourNow();
-		 _minute = minuteNow();
-		 _second = secondNow();
 	}
 }
