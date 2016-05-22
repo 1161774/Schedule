@@ -352,6 +352,7 @@ uint8_t schIWtoVal(sInitWeekday iw)
 }
 
 
+
 uint16_t createScheduleFromComponents(Schedule *s, sInitDay id, sInitRelative ir, sInitWeekday iw, sInitMonth im, uint8_t hour, uint8_t minute, sAmpm ap, uint16_t freq, sRepeatFreq rf)
 {
 	uint8_t schRelativeDate = 0, schRelativeDay = 0,schRelativeMonth = 0;
@@ -359,6 +360,11 @@ uint16_t createScheduleFromComponents(Schedule *s, sInitDay id, sInitRelative ir
 	uint16_t validate;
 	uint32_t dueYear;
 	uint32_t dueDay;
+
+	time_t startOfMonth;
+
+	uint8_t idNum = schIDtoVal(id);
+	uint8_t iwNum = schIWtoVal(iw);
 
 
 	validate = validateComponents(id, ir, iw, im, hour, minute, ap, freq, rf);
@@ -404,7 +410,7 @@ uint16_t createScheduleFromComponents(Schedule *s, sInitDay id, sInitRelative ir
 	// Not today, not tomorrow, not null, must be a 1st-31st
 	else if(id !=schIDnull)
 	{
-		schRelativeDate = schIDtoVal(id);
+		schRelativeDate = idNum;
 	}
 	// id is null
 	else
@@ -433,17 +439,7 @@ uint16_t createScheduleFromComponents(Schedule *s, sInitDay id, sInitRelative ir
 		int8_t today = (int8_t)weekdayNow();
 		uint8_t deltaDays;
 
-		for(deltaDays = 1; deltaDays < 10; deltaDays++)
-		{
-			if(today + deltaDays > 7)
-			{
-				today -= 7;
-			}
-			if((today + deltaDays) == schRelativeDay)
-			{
-				break;
-			}
-		}
+		deltaDays = getDaysToNextDay(today, schRelativeDay);
 
 		if(ir == schIRnext)
 		{
@@ -485,6 +481,31 @@ uint16_t createScheduleFromComponents(Schedule *s, sInitDay id, sInitRelative ir
 		// Nothing to do.
 	}
 
+	startOfMonth = getTimeFromParts(dueYear, schRelativeMonth, 1, 0, 0, 0);
+
+	// things like 1st-4th weekday of a month
+	if(idNum <= 4 && iwNum > 0)
+	{
+		// nothing incompatible was set
+		if(ir == schIRnull && im != schIMfromToday)
+		{
+			uint8_t monthStartDay = weekday(startOfMonth);
+			uint8_t deltaDays;
+
+			if(monthStartDay == iwNum)
+			{
+				deltaDays = 0;
+			}
+			else
+			{
+				deltaDays = getDaysToNextDay(monthStartDay, iwNum);
+			}
+			deltaDays += ((idNum - 1) * 7);
+
+			s->EndTime = startOfMonth + daysToTime_t(deltaDays) + dueTime;
+		}
+
+	}
 
 
 	// schRelativeDate, schRelativeMonth, schRelativeDay

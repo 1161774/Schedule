@@ -58,21 +58,9 @@ void main(void) {
 
 
 	s.StartTime = getTimeFromParts(2016,5,22,01,00,00);
-	breakTime(s.StartTime, &tm);
 
 
-	createScheduleFromComponents(&s, schIDnull, schIRthis, schIWsunday, schIMnull, 23, 15, schAPnull, 0, schRFnull);
-	breakTime(s.EndTime, &tm);
-	createScheduleFromComponents(&s, schIDnull, schIRthis, schIWmonday, schIMnull, 23, 30, schAPnull, 0, schRFnull);
-	breakTime(s.EndTime, &tm);
-	createScheduleFromComponents(&s, schIDnull, schIRthis, schIWwednesday, schIMnull, 23, 45, schAPnull, 0, schRFnull);
-	breakTime(s.EndTime, &tm);
-
-	createScheduleFromComponents(&s, schIDnull, schIRnext, schIWsunday, schIMnull, 23, 15, schAPnull, 0, schRFnull);
-	breakTime(s.EndTime, &tm);
-	createScheduleFromComponents(&s, schIDnull, schIRnext, schIWmonday, schIMnull, 23, 30, schAPnull, 0, schRFnull);
-	breakTime(s.EndTime, &tm);
-	createScheduleFromComponents(&s, schIDnull, schIRnext, schIWwednesday, schIMnull, 23, 45, schAPnull, 0, schRFnull);
+	createScheduleFromComponents(&s, schID1st, schIRnull, schIWmonday, schIMofThisMonth, 00, 00, schAPnull, 0, schRFnull);
 	breakTime(s.EndTime, &tm);
 
 

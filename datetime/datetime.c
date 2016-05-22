@@ -422,7 +422,22 @@ void setSyncInterval(time_t interval){ // set the number of seconds between re-s
 }
 
 
+uint8_t getDaysToNextDay(int8_t startDOW, uint8_t endDOW)
+{
+	uint8_t deltaDays;
 
+	for(deltaDays = 1; deltaDays < 10; deltaDays++)
+	{
+		if(startDOW + deltaDays > 7)
+		{
+			startDOW -= 7;
+		}
+		if((startDOW + deltaDays) == endDOW)
+		{
+			return deltaDays;
+		}
+	}
+}
 
 
 

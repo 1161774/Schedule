@@ -128,5 +128,8 @@ extern	void			setSyncInterval(time_t interval);
 extern	void	breakTime(time_t timeInput, tmElements_t *tm);	// Break time_t into elements
 extern	time_t	makeTime(tmElements_t *tm);					// Convert elements into time_t
 
+extern	uint8_t	getDaysToNextDay(int8_t startDOW, uint8_t endDOW);
+
+
 
 #endif /* DATETIME_H_ */
