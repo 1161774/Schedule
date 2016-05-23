@@ -437,10 +437,38 @@ uint8_t getDaysToNextDay(int8_t startDOW, uint8_t endDOW)
 			return deltaDays;
 		}
 	}
+	// shouldn't get here
+	return 0;
 }
 
 
+uint8_t daysInMonth(uint8_t year, uint8_t month)
+{
+	if(month > 0 && month < 13)
+	{
+	    if ((month == 2) && LEAP_YEAR(year)) {
+	      return 29;
+	    }
+	    else
+	    {
+	      return monthDays[month - 1];  //monthDay array starts from 0
+	    }
+	}
+	return 0;
+}
 
+uint8_t	weekdaysInMonth(uint8_t year, uint8_t month, uint8_t wday)
+{
+	uint8_t mDays = daysInMonth(year, month);
+	uint8_t mStartDay = weekday(getTimeFromParts(year, month, 1, 0, 0, 0));
+
+	// There will always either be 4 or 5 weekdays in any month
+	uint8_t maxDeltaDays = mDays - 28;
+	uint8_t deltaDays = wday >= mStartDay ? wday - mStartDay : (wday + 7) - mStartDay;
+
+	return deltaDays < maxDeltaDays ? 5 : 4;
+
+}
 
 
 

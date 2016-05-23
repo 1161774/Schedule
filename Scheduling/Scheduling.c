@@ -355,11 +355,10 @@ uint8_t schIWtoVal(sInitWeekday iw)
 
 uint16_t createScheduleFromComponents(Schedule *s, sInitDay id, sInitRelative ir, sInitWeekday iw, sInitMonth im, uint8_t hour, uint8_t minute, sAmpm ap, uint16_t freq, sRepeatFreq rf)
 {
-	uint8_t schRelativeDate = 0, schRelativeDay = 0,schRelativeMonth = 0;
+	uint8_t  schRelativeDay = 0,schRelativeMonth = 0;
 	uint32_t dueTime;
 	uint16_t validate;
 	uint32_t dueYear;
-	uint32_t dueDay;
 
 	time_t startOfMonth;
 
@@ -406,11 +405,6 @@ uint16_t createScheduleFromComponents(Schedule *s, sInitDay id, sInitRelative ir
 	{
 		s->EndTime = nextMidnight(now()) + dueTime;
 		return 0;
-	}
-	// Not today, not tomorrow, not null, must be a 1st-31st
-	else if(id !=schIDnull)
-	{
-		schRelativeDate = idNum;
 	}
 	// id is null
 	else
@@ -484,31 +478,80 @@ uint16_t createScheduleFromComponents(Schedule *s, sInitDay id, sInitRelative ir
 	startOfMonth = getTimeFromParts(dueYear, schRelativeMonth, 1, 0, 0, 0);
 
 	// things like 1st-4th weekday of a month
-	if(idNum <= 4 && iwNum > 0)
+	if(idNum <= 5 && iwNum > 0)
 	{
 		// nothing incompatible was set
-		if(ir == schIRnull && im != schIMfromToday)
+		if((ir == schIRnull || ir == schIRlast) && im != schIMfromToday)
 		{
 			uint8_t monthStartDay = weekday(startOfMonth);
 			uint8_t deltaDays;
 
-			if(monthStartDay == iwNum)
+			int8_t multiplier;
+			uint8_t wdim = weekdaysInMonth(dueYear, schRelativeMonth, iwNum);
+
+			// If there aren't that many of the specified weekday in the month, then error.
+			//  For example May 2016 has 5 Mondays, Tuesdays and Sundays, and 4 of every other day.
+			if(idNum > wdim)
 			{
+				return 0;
+			}
+
+
+			if(ir == schIRlast)
+			{
+				multiplier = wdim - idNum;
+				if(monthStartDay == iwNum)
+				{
+					multiplier--;
+				}
+			}
+			else if(monthStartDay == iwNum)
+			{
+				multiplier = 0;
 				deltaDays = 0;
 			}
 			else
 			{
-				deltaDays = getDaysToNextDay(monthStartDay, iwNum);
+				multiplier = idNum - 1;
+
 			}
-			deltaDays += ((idNum - 1) * 7);
+
+			deltaDays = getDaysToNextDay(monthStartDay, iwNum) + (multiplier * 7);
 
 			s->EndTime = startOfMonth + daysToTime_t(deltaDays) + dueTime;
 		}
 
 	}
+	// Looking for setting a day of month
+	else if(idNum > 0)
+	{
+		// nothing incompatible was set
+		if((ir == schIRnull || ir == schIRlast) && iw == schIWday)
+		{
+			uint8_t monthDays = daysInMonth(dueYear, schRelativeMonth);
+			time_t deltaDays = 0;
+
+			// check that there are actually that many days in the specified month
+			if(idNum > monthDays)
+			{
+				// error
+				return 0;
+			}
+
+			if(ir == schIRlast)
+			{
+				deltaDays = daysToTime_t(monthDays - idNum);
+			}
+			else
+			{
+				deltaDays = daysToTime_t(idNum - 1);
+			}
+
+			s->EndTime = startOfMonth + deltaDays + dueTime;
+		}
+	}
 
 
-	// schRelativeDate, schRelativeMonth, schRelativeDay
 
 
 

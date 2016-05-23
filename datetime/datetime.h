@@ -80,10 +80,10 @@ typedef time_t(*getExternalTime)();
 #define	nextMonday(_time_)			(previousMonday(_time_) + SECS_PER_WEEK)
 
 
-#define	minutesToTime_t(M)	(M * SECS_PER_MIN)
-#define hoursToTime_t(H)	(H * SECS_PER_HOUR)
-#define daysToTime_t(D)		(D * SECS_PER_DAY)
-#define weeksToTime_t(W)	(W * SECS_PER_WEEK)
+#define	minutesToTime_t(M)	((M) * SECS_PER_MIN)
+#define hoursToTime_t(H)	((H) * SECS_PER_HOUR)
+#define daysToTime_t(D)		((D) * SECS_PER_DAY)
+#define weeksToTime_t(W)	((W) * SECS_PER_WEEK)
 
 
 extern	uint32_t	hourNow();				// The hour now
@@ -130,6 +130,6 @@ extern	time_t	makeTime(tmElements_t *tm);					// Convert elements into time_t
 
 extern	uint8_t	getDaysToNextDay(int8_t startDOW, uint8_t endDOW);
 
-
-
+extern	uint8_t	daysInMonth(uint8_t year, uint8_t month);
+extern	uint8_t	weekdaysInMonth(uint8_t year, uint8_t month, uint8_t weekday);
 #endif /* DATETIME_H_ */
