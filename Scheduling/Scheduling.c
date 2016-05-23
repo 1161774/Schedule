@@ -361,6 +361,7 @@ uint16_t createScheduleFromComponents(Schedule *s, sInitDay id, sInitRelative ir
 	uint32_t dueYear;
 
 	time_t startOfMonth;
+	time_t startDay;
 
 	uint8_t idNum = schIDtoVal(id);
 	uint8_t iwNum = schIWtoVal(iw);
@@ -375,13 +376,6 @@ uint16_t createScheduleFromComponents(Schedule *s, sInitDay id, sInitRelative ir
 
 	dueYear = yearNow();
 
-	// If the start time hasnt been set, then set it to now
-/*	silly me, it's not initialised to zero. will have to manually set the start time for now.
- * if(s->StartTime == 0)
-	{
-		s->StartTime = now();
-		updateElapsedTime(s);
-	}*/
 
 
 	// 12am is 0 hours after midnight
@@ -393,7 +387,8 @@ uint16_t createScheduleFromComponents(Schedule *s, sInitDay id, sInitRelative ir
 	dueTime = minutesToTime_t(minute) + hoursToTime_t(hour);
 
 	/* should have the due time now */
-	/* now for the hard part... */
+
+
 
 	// determining what date to set the schedule
 	if(id == schIDtoday)
@@ -475,13 +470,30 @@ uint16_t createScheduleFromComponents(Schedule *s, sInitDay id, sInitRelative ir
 		// Nothing to do.
 	}
 
+	uint32_t dn = dayNow();
+
 	startOfMonth = getTimeFromParts(dueYear, schRelativeMonth, 1, 0, 0, 0);
 
+	dn = dayNow();
+
+	if(im == schIMfromToday)
+	{
+		startDay = startOfMonth + daysToTime_t(dayNow() - 1);
+	}
+	else
+	{
+		startDay = startOfMonth;
+	}
+
+	tmElements_t tm;
+	breakTime(startDay, &tm);
+
+
 	// things like 1st-4th weekday of a month
-	if(idNum <= 5 && iwNum > 0)
+	if((idNum <= 5 && iwNum > 0) || (im == schIMfromToday && iw != schIWday && iw != schIWnull))
 	{
 		// nothing incompatible was set
-		if((ir == schIRnull || ir == schIRlast) && im != schIMfromToday)
+		if(ir == schIRnull || (ir == schIRlast && im != schIMfromToday))
 		{
 			uint8_t monthStartDay = weekday(startOfMonth);
 			uint8_t deltaDays;
@@ -491,13 +503,11 @@ uint16_t createScheduleFromComponents(Schedule *s, sInitDay id, sInitRelative ir
 
 			// If there aren't that many of the specified weekday in the month, then error.
 			//  For example May 2016 has 5 Mondays, Tuesdays and Sundays, and 4 of every other day.
-			if(idNum > wdim)
+			if(idNum > wdim && im != schIMfromToday)
 			{
 				return 0;
 			}
-
-
-			if(ir == schIRlast)
+			else if(ir == schIRlast)
 			{
 				multiplier = wdim - idNum;
 				if(monthStartDay == iwNum)
@@ -505,25 +515,29 @@ uint16_t createScheduleFromComponents(Schedule *s, sInitDay id, sInitRelative ir
 					multiplier--;
 				}
 			}
-			else if(monthStartDay == iwNum)
-			{
-				multiplier = 0;
-				deltaDays = 0;
-			}
 			else
 			{
 				multiplier = idNum - 1;
+				if(monthStartDay == iwNum)
+				{
+					multiplier--;
+				}
+			}
 
+			if(im == schIMfromToday)
+			{
+				monthStartDay = weekdayNow(); // Should rename monthStartDay here, as all of a sudden it is not the month start day anymore.
 			}
 
 			deltaDays = getDaysToNextDay(monthStartDay, iwNum) + (multiplier * 7);
 
-			s->EndTime = startOfMonth + daysToTime_t(deltaDays) + dueTime;
+			s->EndTime = startDay + daysToTime_t(deltaDays) + dueTime;
+			return 0;
 		}
-
 	}
+
 	// Looking for setting a day of month
-	else if(idNum > 0)
+	if(idNum > 0)
 	{
 		// nothing incompatible was set
 		if((ir == schIRnull || ir == schIRlast) && iw == schIWday)
@@ -544,13 +558,20 @@ uint16_t createScheduleFromComponents(Schedule *s, sInitDay id, sInitRelative ir
 			}
 			else
 			{
-				deltaDays = daysToTime_t(idNum - 1);
+				if(im = schIMfromToday)
+				{
+					deltaDays = daysToTime_t(idNum);
+				}
+				else
+				{
+					deltaDays = daysToTime_t(idNum - 1);
+				}
 			}
 
-			s->EndTime = startOfMonth + deltaDays + dueTime;
+			s->EndTime = startDay + deltaDays + dueTime;
+			return 0;
 		}
 	}
-
 
 
 

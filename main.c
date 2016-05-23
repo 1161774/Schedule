@@ -54,46 +54,29 @@ void main(void) {
 	tmElements_t tm;
 
 
-	setTimeFromParts(2016,5,22,05,00,00);
+	setTimeFromParts(2016,5,23,05,00,00);
 
 
-	s.StartTime = getTimeFromParts(2016,5,22,01,00,00);
+
+	s.StartTime = getTimeFromParts(2016,5,23,01,00,00);
 
 
-	createScheduleFromComponents(&s, schID1st, schIRlast, schIWsunday, schIMofThisMonth, 00, 00, schAPnull, 0, schRFnull);
+	createScheduleFromComponents(&s, schID1st, schIRnull, schIWsunday, schIMofThisMonth, 00, 00, schAPnull, 0, schRFnull);
 	breakTime(s.EndTime, &tm);
 
-	createScheduleFromComponents(&s, schID1st, schIRlast, schIWmonday, schIMofThisMonth, 00, 00, schAPnull, 0, schRFnull);
+	createScheduleFromComponents(&s, schID1st, schIRnull, schIWmonday, schIMofThisMonth, 00, 00, schAPnull, 0, schRFnull);
 	breakTime(s.EndTime, &tm);
 
-	createScheduleFromComponents(&s, schID1st, schIRlast, schIWwednesday, schIMofThisMonth, 00, 00, schAPnull, 0, schRFnull);
+	createScheduleFromComponents(&s, schID21st, schIRnull, schIWday, schIMofThisMonth, 00, 00, schAPnull, 0, schRFnull);
 	breakTime(s.EndTime, &tm);
 
-	createScheduleFromComponents(&s, schID2nd, schIRlast, schIWsunday, schIMofThisMonth, 00, 00, schAPnull, 0, schRFnull);
+	createScheduleFromComponents(&s, schID21st, schIRnull, schIWday, schIMofNextMonth, 00, 00, schAPnull, 0, schRFnull);
 	breakTime(s.EndTime, &tm);
 
-	createScheduleFromComponents(&s, schID2nd, schIRlast, schIWmonday, schIMofThisMonth, 00, 00, schAPnull, 0, schRFnull);
+	createScheduleFromComponents(&s, schID7th, schIRnull, schIWday, schIMfromToday, 00, 00, schAPnull, 0, schRFnull);
 	breakTime(s.EndTime, &tm);
 
-	createScheduleFromComponents(&s, schID2nd, schIRlast, schIWwednesday, schIMofThisMonth, 00, 00, schAPnull, 0, schRFnull);
-	breakTime(s.EndTime, &tm);
-
-	createScheduleFromComponents(&s, schID4th, schIRlast, schIWsunday, schIMofThisMonth, 00, 00, schAPnull, 0, schRFnull);
-	breakTime(s.EndTime, &tm);
-
-	createScheduleFromComponents(&s, schID4th, schIRlast, schIWmonday, schIMofThisMonth, 00, 00, schAPnull, 0, schRFnull);
-	breakTime(s.EndTime, &tm);
-
-	createScheduleFromComponents(&s, schID4th, schIRlast, schIWwednesday, schIMofThisMonth, 00, 00, schAPnull, 0, schRFnull);
-	breakTime(s.EndTime, &tm);
-
-	createScheduleFromComponents(&s, schID5th, schIRlast, schIWsunday, schIMofThisMonth, 00, 00, schAPnull, 0, schRFnull);
-	breakTime(s.EndTime, &tm);
-
-	createScheduleFromComponents(&s, schID5th, schIRlast, schIWmonday, schIMofThisMonth, 00, 00, schAPnull, 0, schRFnull);
-	breakTime(s.EndTime, &tm);
-
-	createScheduleFromComponents(&s, schID5th, schIRlast, schIWwednesday, schIMofThisMonth, 00, 00, schAPnull, 0, schRFnull);
+	createScheduleFromComponents(&s, schID2nd, schIRnull, schIWmonday, schIMfromToday, 00, 00, schAPnull, 0, schRFnull);
 	breakTime(s.EndTime, &tm);
 
 	while(1)

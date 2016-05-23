@@ -376,18 +376,19 @@ void setTime(time_t t) {
 
 time_t	getTimeFromParts(uint32_t year, uint32_t month, uint32_t day, uint32_t hour, uint32_t minute, uint32_t second)
 {
+	tmElements_t t;
 	  if( year > 99)
 	  {
 		  year = year - 2000;
 	  }
-	  tm.Year = year;
-	  tm.Month = month;
-	  tm.Day = day;
-	  tm.Hour = hour;
-	  tm.Minute = minute;
-	  tm.Second = second;
+	  t.Year = year;
+	  t.Month = month;
+	  t.Day = day;
+	  t.Hour = hour;
+	  t.Minute = minute;
+	  t.Second = second;
 
-	  return makeTime(&tm);
+	  return makeTime(&t);
 }
 
 
